@@ -16,7 +16,7 @@ const Navbar = () => {
     <nav className="bg-white shadow-md py-3 px-6 flex justify-between items-center">
       {/* Brand */}
       <Link to="/" className="text-2xl font-bold text-green-600">
-        EcoTrack
+        WasteWise
       </Link>
 
       {/* Right Section */}

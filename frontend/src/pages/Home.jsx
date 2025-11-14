@@ -14,7 +14,7 @@ const Home = () => {
 
       <div className="relative z-10 text-center text-white max-w-2xl lg:max-w-4xl px-6">
         <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold mb-6 leading-tight">
-          Join the Green Revolution with <span className="text-green-400">EcoTrack</span>
+          Join the Green Revolution with <span className="text-green-400">WasteWise</span>
         </h1>
         <p className="text-lg md:text-xl lg:text-2xl mb-8">
           Track your eco impact, recycle smarter, and make the planet greener—one action at a time.

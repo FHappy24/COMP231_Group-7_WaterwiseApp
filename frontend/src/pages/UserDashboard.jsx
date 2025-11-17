@@ -57,10 +57,10 @@ const UserDashboard = () => {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg shadow-lg p-6">
+          {/* <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg shadow-lg p-6">
             <h3 className="text-lg font-semibold mb-2">Your Rank</h3>
             <p className="text-4xl font-bold">#{userRank}</p>
-          </div>
+          </div> */}
           
           <div className="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg shadow-lg p-6">
             <h3 className="text-lg font-semibold mb-2">Your Points</h3>
@@ -72,13 +72,14 @@ const UserDashboard = () => {
               onClick={() => setIsUploadModalOpen(true)}
               className="bg-white text-purple-600 font-bold py-3 px-6 rounded-lg hover:bg-gray-100 transition"
             >
-              📸 Upload Image
+              Report an Issue
             </button>
           </div>
         </div>
 
-        {/* Leaderboard */}
+        {/* Leaderboard 
         <LeaderboardTable key={refreshKey} />
+        */}
         <ImageTable data={images} showUsers={false} />
       </div>
 

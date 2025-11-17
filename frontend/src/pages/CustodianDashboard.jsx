@@ -64,9 +64,9 @@ const CustodianDashboard = () => {
         </h1>
 
         {/* Leaderboard */}
-        <div className="mb-8">
+        {/*<div className="mb-8">
           <LeaderboardTable />
-        </div>
+        </div>*/}
 
         <div className="my-4 flex justify-between items-center">
           <h2 className="text-2xl font-bold text-gray-800">User Uploads</h2>

@@ -18,7 +18,7 @@ const ImageTable = ({ data = [], showUsers = false }) => {
 
   return (
     <div className={`bg-white shadow-md rounded-xl p-4 relative ${showUsers ? 'mt-1' : 'mt-10'}`}>
-      <h2 className="text-xl font-semibold mb-4">Uploaded Images</h2>
+      <h2 className="text-xl font-semibold mb-4">Reported Issues</h2>
 
       <table className="w-full border">
         <thead>
@@ -27,6 +27,9 @@ const ImageTable = ({ data = [], showUsers = false }) => {
             <th className="p-2 border">Image</th>
             {showUsers && <th className="p-2 border">User</th>}
             <th className="p-2 border">Location</th>
+            <th className="p-2 border">Priority</th>
+            <th className="p-2 border">Status</th>
+            {showUsers && <th className="p-2 border">Action</th>}
             <th className="p-2 border">Timestamp</th>
           </tr>
         </thead>
@@ -54,6 +57,18 @@ const ImageTable = ({ data = [], showUsers = false }) => {
                   <td className="p-2">{img.userID?.name || "N/A"}</td>
                 )}
                 <td className="p-2">{img.location}</td>
+                <td className="p-2">High/Medium/Low</td>
+                <td className="p-2">Reported/In Progress/Fixed</td>
+                {showUsers && (
+                  <td className="p-2">
+                    <button
+                      className="bg-blue-400 px-3 py-1 rounded"
+                    >
+                      Edit Status
+                    </button>
+                  </td>
+                )}
+                  
                 <td className="p-2">{new Date(img.createdAt).toLocaleString()}</td>
                 
               </tr>

@@ -67,10 +67,10 @@ const UserDashboard = () => {
             <p className="text-4xl font-bold">{points}</p>
           </div>
           
-          <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-lg shadow-lg p-6 flex flex-col justify-center">
+          <div className="bg-white/50 rounded-lg shadow-lg p-6 flex flex-col justify-center">
             <button
               onClick={() => setIsUploadModalOpen(true)}
-              className="bg-white text-purple-600 font-bold py-3 px-6 rounded-lg hover:bg-gray-100 transition"
+              className="bg-gradient-to-br from-green-500 to-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-100 transition"
             >
               Report an Issue
             </button>

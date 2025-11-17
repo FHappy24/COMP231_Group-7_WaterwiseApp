@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Badge from "./Badge";
 
 const ImageTable = ({ data = [], showUsers = false }) => {
   const [page, setPage] = useState(1);
@@ -26,6 +27,7 @@ const ImageTable = ({ data = [], showUsers = false }) => {
             <th className="p-2 border">S.No.</th>
             <th className="p-2 border">Image</th>
             {showUsers && <th className="p-2 border">User</th>}
+            <th className="p-2 border">Issue</th>
             <th className="p-2 border">Location</th>
             <th className="p-2 border">Priority</th>
             <th className="p-2 border">Status</th>
@@ -56,9 +58,15 @@ const ImageTable = ({ data = [], showUsers = false }) => {
                 {showUsers && (
                   <td className="p-2">{img.userID?.name || "N/A"}</td>
                 )}
+                <td className="p-2">{img.issue}</td>
                 <td className="p-2">{img.location}</td>
-                <td className="p-2">High/Medium/Low</td>
-                <td className="p-2">Reported/In Progress/Fixed</td>
+                <td className="p-2">
+                  <Badge text={img.status} />
+                </td>
+                <td className="p-2">
+                  <Badge text={img.priority} />
+                </td>
+
                 {showUsers && (
                   <td className="p-2">
                     <button

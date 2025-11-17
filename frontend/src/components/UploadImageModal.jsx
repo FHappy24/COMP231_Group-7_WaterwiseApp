@@ -5,7 +5,10 @@ import { getLocations, uploadImage } from "../services/api";
 const UploadImageModal = ({ isOpen, onClose, onSuccess }) => {
   const [image, setImage] = useState(null);
   const [location, setLocation] = useState("");
+  const [issue, setIssue] = useState("");
+  const [priority, setPriority] = useState("");
   const [locations, setLocations] = useState([]);
+  const priorities = ["High", "Medium", "Low"]
 
   useEffect(() => {
     if (isOpen) fetchLocations();
@@ -23,11 +26,13 @@ const UploadImageModal = ({ isOpen, onClose, onSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!image || !location) return toast.error("All fields are required");
+    if (!image || !location || !issue || !priority) return toast.error("All fields are required");
 
     const formData = new FormData();
     formData.append("image", image);
     formData.append("location", location);
+    formData.append("issue", issue);
+    formData.append("priority", priority);
 
     try {
       await uploadImage(formData);
@@ -36,6 +41,8 @@ const UploadImageModal = ({ isOpen, onClose, onSuccess }) => {
       onClose();
       setImage(null);
       setLocation("");
+      setIssue("");
+      setPriority("");
     } catch (err) {
       toast.error(err.response?.data?.message || "Upload failed");
     }
@@ -48,6 +55,12 @@ const UploadImageModal = ({ isOpen, onClose, onSuccess }) => {
       <div className="bg-white p-6 rounded-xl shadow-lg w-96">
         <h2 className="text-xl font-semibold mb-4">Upload Image</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            onChange={(e) => setIssue(e.target.value)}
+            className="w-full border p-2 rounded"
+            placeholder="Enter Issue : Water Spill, Full Bin..."
+          />
           <input
             type="file"
             accept="image/*"
@@ -63,6 +76,18 @@ const UploadImageModal = ({ isOpen, onClose, onSuccess }) => {
             {locations.map((loc) => (
               <option key={loc._id} value={loc._id}>
                 {loc.title}
+              </option>
+            ))}
+          </select>
+          <select
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+            className="w-full border p-2 rounded"
+          >
+            <option value="">Select Priority</option>
+            {priorities.map((item, i) => (
+              <option key={i} value={item}>
+                {item}
               </option>
             ))}
           </select>

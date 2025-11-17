@@ -119,12 +119,12 @@ const CustodianDashboard = () => {
         onSuccess={handleSuccess}
       />
 
-      <EditCapacityModal
+      {/* <EditCapacityModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         location={selectedLocation}
         onSuccess={handleSuccess}
-      />
+      /> */}
     </div>
   );
 };

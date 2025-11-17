@@ -33,5 +33,7 @@ export const uploadImage = (formData) => api.post('/api/images', formData, {
 });
 export const getMyImages = () => api.get('/api/images/my-images');
 export const getAllImages = () => api.get('/api/images');
+export const updateImageStatus = (id, data) => api.put(`/api/images/${id}`, data);
+
 
 export default api;

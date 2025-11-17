@@ -1,14 +1,19 @@
 import { useState } from "react";
 import Badge from "./Badge";
 
-const ImageTable = ({ data = [], showUsers = false }) => {
+const ImageTable = ({ data = [], showUsers = false, onEdit }) => {
   const [page, setPage] = useState(1);
   const [selectedImage, setSelectedImage] = useState(null);
   const perPage = 10;
+  const priorityOrder = {
+    High: 1,
+    Medium: 2,
+    Low: 3,
+  };
 
   // Sort newest first
   const sortedData = [...data].sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
   );
 
   const startIndex = (page - 1) * perPage;
@@ -61,16 +66,18 @@ const ImageTable = ({ data = [], showUsers = false }) => {
                 <td className="p-2">{img.issue}</td>
                 <td className="p-2">{img.location}</td>
                 <td className="p-2">
-                  <Badge text={img.status} />
+                  <Badge text={img.priority} />
                 </td>
                 <td className="p-2">
-                  <Badge text={img.priority} />
+                  <Badge text={img.status} />
                 </td>
 
                 {showUsers && (
                   <td className="p-2">
                     <button
-                      className="bg-blue-400 px-3 py-1 rounded"
+                      onClick={() => onEdit(img)}
+                      className="bg-gray-200 px-3 py-1 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={img.status == "Fixed"}
                     >
                       Edit Status
                     </button>

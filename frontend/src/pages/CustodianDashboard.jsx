@@ -3,11 +3,10 @@ import { useAuth } from '../context/AuthContext';
 import { getAllImages, getAllLocations} from '../services/api';
 import LeaderboardTable from '../components/LeaderboardTable';
 import LocationsTable from '../components/LocationsTable';
-import CapacityChart from '../components/CapacityChart';
 import AddLocationModal from '../components/AddLocationModal';
-import EditCapacityModal from '../components/EditCapacityModal';
 import toast from 'react-hot-toast';
 import ImageTable from '../components/ImageTable';
+import EditStatusModal from '../components/EditStatusModal';
 
 const CustodianDashboard = () => {
   const { user } = useAuth();
@@ -15,7 +14,7 @@ const CustodianDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [images, setImages] = useState([]);
   const [loadingImages, setLoadingImages] = useState(false);
 
@@ -47,13 +46,13 @@ const CustodianDashboard = () => {
     }
   };
 
-  const handleEdit = (location) => {
-    setSelectedLocation(location);
+  const handleEdit = (image) => {
+    setSelectedImage(image);
     setIsEditModalOpen(true);
   };
 
   const handleSuccess = () => {
-    fetchLocations();
+    GetAllImages();
   };
 
   return (
@@ -84,19 +83,19 @@ const CustodianDashboard = () => {
             </div>
           ) : (
             <div className='mb-8'>
-              <ImageTable data={images} showUsers={true} />
+              <ImageTable data={images} showUsers={true}  onEdit={handleEdit}/>
             </div>
           )}
 
         {/* Capacity Chart */}
-        {locations.length > 0 && (
+        {/* {locations.length > 0 && (
           <div className="mb-8">
             <CapacityChart locations={locations} />
           </div>
-        )}
+        )} */}
 
         {/* Locations Table */}
-        <div className="mb-4 flex justify-between items-center">
+        <div className="w-full md:max-w-[40%] mb-4 flex justify-between items-center">
           <h2 className="text-2xl font-bold text-gray-800">Manage Locations</h2>
           <button
             onClick={() => setIsAddModalOpen(true)}
@@ -109,7 +108,7 @@ const CustodianDashboard = () => {
         {loading ? (
           <div className="text-center py-8">Loading locations...</div>
         ) : (
-          <LocationsTable locations={locations} onEdit={handleEdit} />
+          <LocationsTable locations={locations}/>
         )}
       </div>
 
@@ -119,12 +118,12 @@ const CustodianDashboard = () => {
         onSuccess={handleSuccess}
       />
 
-      {/* <EditCapacityModal
+      <EditStatusModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        location={selectedLocation}
+        image={selectedImage}
         onSuccess={handleSuccess}
-      /> */}
+      />
     </div>
   );
 };

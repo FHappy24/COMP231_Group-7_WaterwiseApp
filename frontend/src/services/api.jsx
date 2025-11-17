@@ -25,7 +25,6 @@ export const getUser = (userId) => api.get(`/api/auth/user/${userId}`);
 export const getLocations = () => api.get('/api/locations');
 export const getAllLocations = () => api.get('/api/locations/all');
 export const createLocation = (data) => api.post('/api/locations', data);
-export const updateLocationCapacity = (id, data) => api.put(`/api/locations/${id}`, data);
 
 // Image APIs
 export const uploadImage = (formData) => api.post('/api/images', formData, {

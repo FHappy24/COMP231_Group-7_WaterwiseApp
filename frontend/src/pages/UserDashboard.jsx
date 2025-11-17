@@ -9,25 +9,13 @@ import toast from 'react-hot-toast';
 const UserDashboard = () => {
   const { user } = useAuth();
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [userRank, setUserRank] = useState(null);
-  const [refreshKey, setRefreshKey] = useState(0);
   const [points, setPoints] = useState(user.points);
   const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchUserRank();
     GetUserImages();
   }, [user.points]);
-
-  const fetchUserRank = async () => {
-    try {
-      const response = await getLeaderboard();
-      const rank = response.data.findIndex(u => u._id === user._id) + 1;
-      setUserRank(rank || '-');
-    } catch (error) {
-      console.error('Failed to fetch rank');
-    }
-  };
 
   const GetUserImages = async () => {
     try {
@@ -38,15 +26,17 @@ const UserDashboard = () => {
     }
   };
 
-  const handleUploadSuccess = async() => {
-    await getUser(user._id).then(res => {
-        setPoints(res.data.points);
-      }
-    );
-    setRefreshKey(prev => prev + 1);
-    fetchUserRank();
+  const handleUploadSuccess = () => {
     GetUserImages();
   };
+
+  const refreshPoints = async () => {
+    setLoading(true)
+    await getUser(user._id).then(res => {
+      setPoints(res.data.points)
+    })
+    setLoading(false)
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -57,14 +47,18 @@ const UserDashboard = () => {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg shadow-lg p-6">
-            <h3 className="text-lg font-semibold mb-2">Your Rank</h3>
-            <p className="text-4xl font-bold">#{userRank}</p>
-          </div> */}
-          
           <div className="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg shadow-lg p-6">
-            <h3 className="text-lg font-semibold mb-2">Your Points</h3>
-            <p className="text-4xl font-bold">{points}</p>
+            <div className='flex justify-between items-start gap-3'>
+              <h3 className="text-lg font-semibold mb-2">Your Points</h3>
+              <button
+                type='button'
+                onClick={refreshPoints}
+                className='bg-white p-2 rounded text-green-500 font-semibold'
+              >
+                <img src="/icons8-refresh.svg" alt="" className='w-5 h-5'/>
+              </button>
+            </div>
+            <p className="text-4xl font-bold">{loading ? "Loading...": points}</p>
           </div>
           
           <div className="bg-white/50 rounded-lg shadow-lg p-6 flex flex-col justify-center">

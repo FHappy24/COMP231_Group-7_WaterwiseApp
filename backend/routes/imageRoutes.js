@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { postImage, getImages, getMyImages } = require('../controllers/imageController');
+const { postImage, getImages, getMyImages, updateImageStatus } = require('../controllers/imageController');
 const { protect } = require('../middleware/auth');
 const upload = require('../middleware/upload');
 
@@ -8,5 +8,6 @@ const upload = require('../middleware/upload');
 router.post('/', protect, upload.single('image'), postImage);
 router.get('/', protect, getImages);
 router.get('/my-images', protect, getMyImages);
+router.put('/:id', protect, updateImageStatus);
 
 module.exports = router;

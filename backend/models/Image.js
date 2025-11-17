@@ -10,9 +10,24 @@ const imageSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, 'Please add a user ID']
   },
+  issue: {
+    type: String,
+    required: [true, 'Please add an issue'],
+    default: "Full Bin"
+  },
   location: {
     type: String,
-    required: [true, 'Please add a location']
+    required: [true, 'Please select location']
+  },
+  priority: {
+    type: String,
+    required: [false, 'Please select priority'],
+    default: "Low"
+  },
+  status: {
+    type: String,
+    required: false,
+    default: "Reported"
   }
 }, {
   timestamps: true

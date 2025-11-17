@@ -7,7 +7,7 @@ const Location = require('../models/Location');
 // @access  Private
 const postImage = async (req, res) => {
   try {
-    const { location } = req.body;
+    const { location, priority, issue } = req.body;
 
     // Validation
     if (!req.file) {
@@ -18,6 +18,15 @@ const postImage = async (req, res) => {
       return res.status(400).json({ message: 'Please add location' });
     }
 
+    if (!priority) {
+      return res.status(400).json({ message: 'Please add priority' });
+    }
+
+    if (!issue) {
+      return res.status(400).json({ message: 'Please add issue' });
+    }
+
+
     // Check if location exists and has capacity
     const locationDoc = await Location.findById(location);
     
@@ -25,30 +34,32 @@ const postImage = async (req, res) => {
       return res.status(404).json({ message: 'Location not found' });
     }
 
-    if (locationDoc.capacity <= 0) {
-      return res.status(400).json({ message: 'Location has reached maximum capacity' });
-    }
+    // if (locationDoc.capacity <= 0) {
+    //   return res.status(400).json({ message: 'Location has reached maximum capacity' });
+    // }
 
     // Create image record with saved filename
     const image = await Image.create({
       imageName: req.file.filename, // Saved filename from multer
       userID: req.user._id,
-      location: locationDoc.title
+      location: locationDoc.title,
+      priority,
+      issue
     });
 
     // Update user points - add 10 points
-    await User.findByIdAndUpdate(
-      req.user._id,
-      { $inc: { points: 10 } },
-      { new: true }
-    );
+    // await User.findByIdAndUpdate(
+    //   req.user._id,
+    //   { $inc: { points: 10 } },
+    //   { new: true }
+    // );
 
     // Update location capacity - reduce by 10
-    await Location.findByIdAndUpdate(
-      location,
-      { $inc: { capacity: -10 } },
-      { new: true }
-    );
+    // await Location.findByIdAndUpdate(
+    //   location,
+    //   { $inc: { capacity: -10 } },
+    //   { new: true }
+    // );
 
     res.status(201).json({
       message: 'Image uploaded successfully',
@@ -56,9 +67,11 @@ const postImage = async (req, res) => {
         _id: image._id,
         imageName: image.imageName,
         location: image.location,
+        priority: image.priority,
+        status: image.status,
         imageUrl: `/uploads/${image.imageName}`
-      },
-      pointsEarned: 10
+      }
+      // pointsEarned: 10
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -104,4 +117,47 @@ const getMyImages = async (req, res) => {
   }
 };
 
-module.exports = { postImage, getImages, getMyImages };
+
+// @desc    Update Image Status/Priority
+// @route   PUT /api/images/:id
+// @access  Private
+const updateImageStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    // Validation
+    if (status === undefined || status === null) {
+      return res.status(400).json({ message: 'Please provide status value' });
+    }
+
+    // Find and update Image
+    const image = await Image.findById(req.params.id);
+
+    if (!image) {
+      return res.status(404).json({ message: 'Image not found' });
+    }
+
+    // Update user points - add 10 points
+    if (status == "Fixed") {
+      const user = await User.findByIdAndUpdate(
+        image.userID,
+        { $inc: { points: 10 } },
+        { new: true }
+      );
+      console.log({status, user});
+    }
+
+    image.status = status;
+    await image.save();
+
+    res.json({
+      message: 'Image status updated successfully',
+      image
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+module.exports = { postImage, getImages, getMyImages, updateImageStatus };

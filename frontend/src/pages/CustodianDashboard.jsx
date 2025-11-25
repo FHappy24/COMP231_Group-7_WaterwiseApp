@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { getAllImages, getAllLocations} from '../services/api';
+import { getAllImages, getAllLocations } from '../services/api';
 import LeaderboardTable from '../components/LeaderboardTable';
 import LocationsTable from '../components/LocationsTable';
 import AddLocationModal from '../components/AddLocationModal';
@@ -23,6 +23,7 @@ const CustodianDashboard = () => {
     GetAllImages();
   }, []);
 
+  // Load all locations
   const fetchLocations = async () => {
     try {
       const response = await getAllLocations();
@@ -34,6 +35,7 @@ const CustodianDashboard = () => {
     }
   };
 
+  // Load all images
   const GetAllImages = async () => {
     setLoadingImages(true);
     try {
@@ -46,13 +48,15 @@ const CustodianDashboard = () => {
     }
   };
 
+  // Open edit modal for status change
   const handleEdit = (image) => {
     setSelectedImage(image);
     setIsEditModalOpen(true);
   };
 
+  // SUCCESS CALLBACK FIX — refresh locations, not images
   const handleSuccess = () => {
-    GetAllImages();
+    fetchLocations();  // Refreshes location list after add
   };
 
   return (
@@ -62,11 +66,7 @@ const CustodianDashboard = () => {
           Custodian Dashboard - {user.name}
         </h1>
 
-        {/* Leaderboard */}
-        {/*<div className="mb-8">
-          <LeaderboardTable />
-        </div>*/}
-
+        {/* User Uploads Section */}
         <div className="my-4 flex justify-between items-center">
           <h2 className="text-2xl font-bold text-gray-800">User Uploads</h2>
           <button
@@ -78,23 +78,16 @@ const CustodianDashboard = () => {
         </div>
 
         {loadingImages ? (
-            <div className='bg-white w-full rounded-lg shadow flex justify-center items-center p-5 min-h-64 mb-8'>
-              <p className="text-center text-gray-500 py-8 text-lg">Loading...</p>
-            </div>
-          ) : (
-            <div className='mb-8'>
-              <ImageTable data={images} showUsers={true}  onEdit={handleEdit}/>
-            </div>
-          )}
-
-        {/* Capacity Chart */}
-        {/* {locations.length > 0 && (
-          <div className="mb-8">
-            <CapacityChart locations={locations} />
+          <div className='bg-white w-full rounded-lg shadow flex justify-center items-center p-5 min-h-64 mb-8'>
+            <p className="text-center text-gray-500 py-8 text-lg">Loading...</p>
           </div>
-        )} */}
+        ) : (
+          <div className='mb-8'>
+            <ImageTable data={images} showUsers={true} onEdit={handleEdit} />
+          </div>
+        )}
 
-        {/* Locations Table */}
+        {/* Locations Section */}
         <div className="w-full md:max-w-[40%] mb-4 flex justify-between items-center">
           <h2 className="text-2xl font-bold text-gray-800">Manage Locations</h2>
           <button
@@ -108,21 +101,23 @@ const CustodianDashboard = () => {
         {loading ? (
           <div className="text-center py-8">Loading locations...</div>
         ) : (
-          <LocationsTable locations={locations}/>
+          <LocationsTable locations={locations} />
         )}
       </div>
 
+      {/* Add Location Modal */}
       <AddLocationModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onSuccess={handleSuccess}
+        onSuccess={handleSuccess}  // <— FIXED CALLBACK
       />
 
+      {/* Edit Status Modal */}
       <EditStatusModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         image={selectedImage}
-        onSuccess={handleSuccess}
+        onSuccess={GetAllImages}
       />
     </div>
   );
